@@ -34,10 +34,10 @@ app.use(express.json()); // Automatically parses JSON
 
 // Endpoint to save GPA data
 app.post("/api/save-gpa", async (req, res) => {
-  const { registrationNumber, gpas } = req.body;
+  const { registrationNumber,name, gpas } = req.body;
 
   try {
-    if (typeof registrationNumber !== "string" || typeof gpas !== "object") {
+    if (typeof registrationNumber !== "string" || typeof name !== "string"|| typeof gpas !== "object") {
       return res.status(400).json({ error: "Invalid input format" });
     }
 
@@ -49,11 +49,15 @@ app.post("/api/save-gpa", async (req, res) => {
       for (const [sem, gpa] of Object.entries(gpas)) {
         existingGpa.gpas.set(sem, gpa);
       }
+      if (name) {
+        existingGpa.name = name; // Update the name if provided
+      }
       await existingGpa.save();
     } else {
       // Create a new GPA record if it doesn't exist
       const newGpa = new Gpa({
         registrationNumber,
+        name,
         gpas: new Map(Object.entries(gpas)),
       });
       await newGpa.save();
