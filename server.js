@@ -19,6 +19,7 @@ db.once("open", () => {
 // Define a schema and model for GPA data
 const gpaSchema = new mongoose.Schema({
   registrationNumber: { type: String, required: true, unique: true },
+  name:{type: String},
   gpas: {
     type: Map,
     of: Number,
